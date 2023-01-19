@@ -1,0 +1,16 @@
+.navLink{
+    position: absolute;
+    right: 10px;
+}
+
+.link {
+    flex-grow: 1;
+    text-decoration: none;
+    color: white;
+    font-size: 20px;
+    margin: 15px; 
+}
+
+.link:hover {
+    color: yellow;
+}
