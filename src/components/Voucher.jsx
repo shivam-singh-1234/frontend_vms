@@ -5,8 +5,8 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import ModeIcon from '@mui/icons-material/Mode';
 import Grid from '@mui/material/Grid';
 import { useSelector, useDispatch} from "react-redux";
-import { getVoucher,postVoucher } from "../redux/actions";
-import axios from "axios";
+import { getVoucher,postVoucher,editVoucher } from "../redux/actions";
+
  
 const useStyles = makeStyles((Theme) => ({
     table: {
@@ -89,8 +89,7 @@ const Voucher=()=>{
         formData.append("code",state.code)
         formData.append("discount",state.discount)
         console.log(formData)
-        let res=await axios.patch(`voucher/update-voucher/${editId}`,formData);
-        dispatch(getVoucher());  
+        dispatch(editVoucher(data,editId))
       }
 return(
 <div className="main">
