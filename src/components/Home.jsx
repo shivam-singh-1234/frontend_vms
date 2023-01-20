@@ -1,14 +1,8 @@
-import React,{ useEffect } from 'react';
-import {useDispatch} from "react-redux";
-import { getUser } from '../redux/actions';
+import React from 'react';
 
 const Home=()=>{
-    const dispatch=useDispatch();
-
-    useEffect(()=>{
-      dispatch(getUser());  
-    },[dispatch])
   
+
     return(<>
         <h1 style={{textAlign:"center"}}>Home page</h1>
         <p>
