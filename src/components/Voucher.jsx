@@ -7,7 +7,6 @@ import Grid from '@mui/material/Grid';
 import { useSelector, useDispatch} from "react-redux";
 import { getVoucher,postVoucher,editVoucher,deleteVoucher } from "../redux/actions";
 
- 
 const useStyles = makeStyles((Theme) => ({
     table: {
       maxHeight: 'calc(100vh - 260px)',
@@ -26,18 +25,18 @@ const useStyles = makeStyles((Theme) => ({
 const Voucher=()=>{
     const classes = useStyles();
     const dispatch=useDispatch();
-    const logoref=useRef(null);
     const data=useSelector((state)=>state.crudOperation.voucherList.data);
     const success=useSelector((state)=>state.crudOperation.voucherList.success);
+    const[logo,setLogo]=useState(null);
+    const [icon,setIcon]=useState(null);
+    const[isEdit,setEdit]=useState(false);
+    const[editId,setEditId]=useState();
     const[state,setState]=useState({
         voucherName: "",
         code: "",
         discount:"",
       });
-    const[logo,setLogo]=useState(null);
-    const [icon,setIcon]=useState(null);
-    const[isEdit,setEdit]=useState(false);
-    const[editId,setEditId]=useState();
+
     useEffect(()=>{
         dispatch(getVoucher());  
       },[dispatch])
@@ -48,7 +47,7 @@ const Voucher=()=>{
         discount:"",
       });
       setIcon(null);
-      setIcon(null);
+      setLogo(null);
     },[success])
 
       const inputChange=(e)=>{
@@ -129,19 +128,20 @@ return(
   <div className="form-group">
         <label >ICON:</label>
         <input type="file" className="form-control" id="icon" name="icon"   placeholder="Enter Icon" onChange={inputIcon}/>
+        {isEdit&&icon? <img src={icon} alt="icon" width="40" height="30"/>:""}
     </div>
   </Grid>
   <Grid item xs={4}>
   <div className="form-group">
         <label >Logo:</label>
         <input type="file" className="form-control" id="logo" name="logo"  placeholder="Enter logo" onChange={inputLogo}/>
+        {isEdit&&logo? <img src={logo} alt="logo" width="40" height="30"/>:""}
     </div>
   </Grid>
 </Grid>
 {!isEdit?
 <button onClick={onSubmit}>Submit</button>:<button onClick={onEditSubmit}>Edit</button>}
  </form>
-
     <Paper sx={{ width: '100%', overflow: 'hidden' }}>
     <TableContainer className={classes.container} component={Paper}>
       <Table className={classes.table} aria-label="scrollable table">
