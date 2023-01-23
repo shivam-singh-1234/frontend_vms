@@ -1,6 +1,7 @@
 import { GET_USER_LOADING,GET_USER_LOADED,GET_USER_ERROR,
     GET_VOUCHER_LOADING,GET_VOUCHER_LOADED,GET_VOUCHER_ERROR,
-    POST_VOUCHER_ERROR,POST_VOUCHER_LOADED,POST_VOUCHER_LOADING} from "../actions/actionType";
+    POST_VOUCHER_ERROR,POST_VOUCHER_LOADED,POST_VOUCHER_LOADING,
+    EDIT_VOUCHER_LOADING,EDIT_VOUCHER_LOADED,EDIT_VOUCHER_ERROR, DELETE_VOUCHER_LOADED} from "../actions/actionType";
 
 const initialData = {
     userList: {
@@ -119,6 +120,41 @@ const crudOperation=(state=initialData,action)=>{
                                         error: true
                                     }
                                 }
+                        
+                                case EDIT_VOUCHER_LOADING:
+                                    return{
+                                        ...state,
+                                        voucherList: {
+                                            data: state.voucherList.data,
+                                            loading: true,
+                                            success: false,
+                                            error: false
+                                        }
+                                    }
+                        
+                                case EDIT_VOUCHER_LOADED:
+
+                                    return {
+                                        ...state,
+                                        voucherList: {
+                                            ...state.voucherList,
+                                            data:state.voucherList.data.map((elem)=>elem.id==action.payload.id?action.payload:elem),
+                                            loading: false,
+                                            success: true,
+                                            error: false
+                                        }
+                                    }
+                                case DELETE_VOUCHER_LOADED:
+                                    return{
+                                        ...state,
+                                        voucherList:{
+                                            ...state.voucherList,
+                                            data:state.voucherList.data.filter(elem=>elem.id!==action.payload),
+                                            loading: false,
+                                            success: true,
+                                            error: false
+                                        }
+                                    }
 
             default: return state;
         }

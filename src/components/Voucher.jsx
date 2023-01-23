@@ -1,11 +1,11 @@
-import React,{useEffect,useState} from "react";
+import React,{useEffect,useState,useRef} from "react";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper,makeStyles, Theme } from '@material-ui/core';
 import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ModeIcon from '@mui/icons-material/Mode';
 import Grid from '@mui/material/Grid';
 import { useSelector, useDispatch} from "react-redux";
-import { getVoucher,postVoucher,editVoucher } from "../redux/actions";
+import { getVoucher,postVoucher,editVoucher,deleteVoucher } from "../redux/actions";
 
  
 const useStyles = makeStyles((Theme) => ({
@@ -26,7 +26,9 @@ const useStyles = makeStyles((Theme) => ({
 const Voucher=()=>{
     const classes = useStyles();
     const dispatch=useDispatch();
+    const logoref=useRef(null);
     const data=useSelector((state)=>state.crudOperation.voucherList.data);
+    const success=useSelector((state)=>state.crudOperation.voucherList.success);
     const[state,setState]=useState({
         voucherName: "",
         code: "",
@@ -39,16 +41,27 @@ const Voucher=()=>{
     useEffect(()=>{
         dispatch(getVoucher());  
       },[dispatch])
+    useEffect(()=>{
+      setState({
+        voucherName: "",
+        code: "",
+        discount:"",
+      });
+      setIcon(null);
+      setIcon(null);
+    },[success])
 
       const inputChange=(e)=>{
         let name=e.target.name;
         let value=e.target.value;
         setState({...state,[name]:value});
+
       }
       const inputLogo=(e)=>{
         setLogo(e.target.files[0])
       }
       const inputIcon=(e)=>{
+        console.log("line no 54",e.target.files[0])
         setIcon(e.target.files[0])
       }
       const onEdit=(elem,id)=>{
@@ -59,14 +72,15 @@ const Voucher=()=>{
             code: elem.code,
             discount:elem.discount
           });
-          console.log(elem.logo)
-          if(elem.logo){ setLogo(elem.logo) 
+          if(elem.logo){ 
+            setLogo(elem.logo) 
             console.log(elem.logo)}
           if(elem.icon){setIcon(elem.icon)
             console.log(elem.icon)}
       }
+
       const onDelete=(elem)=>{
-        console.log("elem",elem)
+        dispatch(deleteVoucher(elem.id))
       }
       const onSubmit =async (e) => {
         e.preventDefault();
@@ -75,9 +89,7 @@ const Voucher=()=>{
         formData.append("logo", logo);
         formData.append("voucherName",state.voucherName)
         formData.append("code",state.code)
-        formData.append("discount",state.discount)
-        // let res=await axios.post("voucher/create-voucher",formData);
-        // dispatch(getVoucher());  
+        formData.append("discount",state.discount) 
         dispatch(postVoucher(formData))
       };
       const onEditSubmit=async(e)=>{
@@ -88,8 +100,7 @@ const Voucher=()=>{
         formData.append("voucherName",state.voucherName)
         formData.append("code",state.code)
         formData.append("discount",state.discount)
-        console.log(formData)
-        dispatch(editVoucher(data,editId))
+        dispatch(editVoucher(formData,editId))
       }
 return(
 <div className="main">
@@ -117,7 +128,7 @@ return(
   <Grid item xs={4}>
   <div className="form-group">
         <label >ICON:</label>
-        <input type="file" className="form-control" id="icon" name="icon"  placeholder="Enter Icon" onChange={inputIcon}/>
+        <input type="file" className="form-control" id="icon" name="icon"   placeholder="Enter Icon" onChange={inputIcon}/>
     </div>
   </Grid>
   <Grid item xs={4}>

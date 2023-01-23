@@ -33,17 +33,27 @@ export const postVoucher=(body)=>async(dispatch)=>{
     }
 }
 
-export const editVoucher=(body)=>async(dispatch)=>{
+export const editVoucher=(body,id)=>async(dispatch)=>{
     try{
         dispatch({type:"EDIT_VOUCHER_LOADING"})
-        const data=await axios.patch(`/voucher/update-voucher/${1}`,body);
-        dispatch({type:"EDIt_VOUCHER_LOADED",payload:data.data.data})
+        const data=await axios.patch(`/voucher/update-voucher/${id}`,body);
+        dispatch({type:"EDIT_VOUCHER_LOADED",payload:data.data.data})
     }
     catch(error){
         dispatch({type:"EDIT_VOUCHER_ERROR"})
     }
 }
 
+export const deleteVoucher=(id)=>async(dispatch)=>{
+    try{
+        dispatch({type:"DELETE_VOUCHER_LOADING"})
+        const data=await axios.delete(`/voucher/delete-voucher/${id}`);
+        dispatch({type:"DELETE_VOUCHER_LOADED",payload:id})
+    }
+    catch(error){
+        dispatch({type:"DELETE_VOUCHER_ERROR"})
+    }
+}
 
 
 
