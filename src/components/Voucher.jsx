@@ -31,6 +31,9 @@ const Voucher=()=>{
     const [icon,setIcon]=useState(null);
     const[isEdit,setEdit]=useState(false);
     const[editId,setEditId]=useState();
+    const logoRef=useRef(null);
+    const[isIconEdit,setIconEdit]=useState(false);
+    const[isLogoEdit,setLogoEdit]=useState(false);
     const[state,setState]=useState({
         voucherName: "",
         code: "",
@@ -48,6 +51,7 @@ const Voucher=()=>{
       });
       setIcon(null);
       setLogo(null);
+      setEdit(false);
     },[success])
 
       const inputChange=(e)=>{
@@ -89,7 +93,12 @@ const Voucher=()=>{
         formData.append("voucherName",state.voucherName)
         formData.append("code",state.code)
         formData.append("discount",state.discount) 
-        dispatch(postVoucher(formData))
+        if(!state.voucherName||!state.code||!state.discount){
+          alert("Please fill all the field")
+        }
+        else{
+          dispatch(postVoucher(formData))
+        }
       };
       const onEditSubmit=async(e)=>{
         e.preventDefault();
@@ -127,14 +136,18 @@ return(
   <Grid item xs={4}>
   <div className="form-group">
         <label >ICON:</label>
+       {isEdit && !isIconEdit? <ModeIcon onClick={()=>{setIconEdit(true)}}/>:
         <input type="file" className="form-control" id="icon" name="icon"   placeholder="Enter Icon" onChange={inputIcon}/>
+       }
         {isEdit&&icon? <img src={icon} alt="icon" width="40" height="30"/>:""}
     </div>
   </Grid>
   <Grid item xs={4}>
   <div className="form-group">
         <label >Logo:</label>
-        <input type="file" className="form-control" id="logo" name="logo"  placeholder="Enter logo" onChange={inputLogo}/>
+        {isEdit && !isLogoEdit? <ModeIcon onClick={()=>{setLogoEdit(true)}}/>:
+        <input type="file" className="form-control" id="logo" name="logo"  placeholder="Enter logo"  onChange={inputLogo}/>
+        }
         {isEdit&&logo? <img src={logo} alt="logo" width="40" height="30"/>:""}
     </div>
   </Grid>
